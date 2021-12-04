@@ -1,0 +1,34 @@
+site_name: evesquare
+site_description: evesquareBlog
+site_author: evesquare
+copyright: Copyright &copy 2022 evesquare
+
+theme:
+  name: gitbook
+  palette:
+    scheme: preference
+    primary: indigo
+    accent: amber
+  font:
+    text: Noto Sans
+    code: Inconsolata
+  language: ja
+  features:
+    - navigation.instant
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed
+  - footnotes
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.arithmatex:
+      generic: true
+  - meta
