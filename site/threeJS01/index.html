@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>Three.js学習 - evesquare</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="evesquareBlog">
+<meta name="generator" content="mkdocs-1.2.3, mkdocs-gitbook-1.0.7">
+<meta name="author" content="evesquare">
+<link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
+<meta name="HandheldFriendly" content="true"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta rel="next" href="" />
+<link href="../css/style.min.css" rel="stylesheet"> 
+</head>
+
+<body>
+<div class="book">
+<div class="book-summary">
+<div id="book-search-input" role="search">
+<input type="text" placeholder="Type to search" />
+</div> <!-- end of book-search-input -->
+
+<nav role="navigation">
+<ul class="summary">
+<li>
+<a href=".." target="_blank" class="custom-link">evesquare</a>
+</li>
+<li class="divider"></li>
+<li class="chapter" data-path="">
+<a href="..">Welcome to MkDocs</a>
+<li class="chapter active" data-path="threeJS01/">
+<a href="./">Three.js学習</a>
+<li class="divider"></li>
+
+
+<li>Copyright &copy 2022 evesquare</li>
+
+
+<li><a href="http://www.mkdocs.org">
+Published with MkDocs
+</a></li>
+
+<li><a href="https://github.com/GitbookIO/theme-default">
+Theme by GitBook
+</a></li>
+</ul>
+
+</nav>
+
+</div> <!-- end of book-summary -->
+
+<div class="book-body">
+<div class="body-inner">
+<div class="book-header" role="navigation">
+
+<!-- Title -->
+<h1>
+<i class="fa fa-circle-o-notch fa-spin"></i>
+<a href="." ></a>
+</h1>
+
+</div> <!-- end of book-header -->
+
+<div class="page-wrapper" tabindex="-1" role="main">
+<div class="page-inner">
+<div id="book-search-results">
+<div class="search-noresults">
+
+<section class="normal markdown-section">
+
+
+
+<h1 id="threejs">Three.js学習<a class="headerlink" href="#threejs" title="Permanent link">&para;</a></h1>
+<h2 id="threejs_1">Three.js一般初期設定<a class="headerlink" href="#threejs_1" title="Permanent link">&para;</a></h2>
+<p><code>scene</code>, <code>camera</code>, <code>renderer</code>
+の定義</p>
+<p><code>scene</code>
+  -&gt;  表示したいすべての光源を保持して変更を監視するコンテナオブジェクト</p>
+<p><code>camera</code>
+  -&gt;  シーンを描画するときに何が見えるかを決定する．</p>
+<p><code>renderer</code>
+  -&gt;  cameraオブジェクトの角度に基づいてブラウザ内でsceneオブジェクトがどのように見えるかを計算する</p>
+<div class="highlight"><pre><span></span><code><span class="kd">var</span> <span class="nx">scene</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Scene</span><span class="p">();</span>
+
+<span class="kd">var</span> <span class="nx">camera</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">PerspectiveCamera</span><span class="p">(</span><span class="mf">45</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span> <span class="o">/</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1000</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">WebGLRenderer</span><span class="p">();</span>
+<span class="nx">renderer</span><span class="p">.</span><span class="nx">setClearColor</span><span class="p">(</span><span class="ow">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Color</span><span class="p">(</span><span class="mh">0xEEEEEE</span><span class="p">));</span>
+<span class="nx">renderer</span><span class="p">.</span><span class="nx">setSize</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="axes">axesオブジェクト生成<a class="headerlink" href="#axes" title="Permanent link">&para;</a></h2>
+<p><img alt="axesとは" src="https://raw.githubusercontent.com/EveSquare/images/main/axes.png?token=AMA45GTAYH25JCXWNGUO6JDBXGNHY" />
+赤，青，緑の線のこと</p>
+<div class="highlight"><pre><span></span><code><span class="kd">var</span> <span class="nx">axes</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">AxisHelper</span><span class="p">(</span><span class="mf">60</span><span class="p">);</span> <span class="c1">//60は長さ</span>
+<span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">axes</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="_1">平面を作成<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p><img alt="平面を作成" src="https://raw.githubusercontent.com/EveSquare/images/main/axes.png?token=AMA45GTAYH25JCXWNGUO6JDBXGNHY" />
+灰色の薄っぺらい平面のこと</p>
+<div class="highlight"><pre><span></span><code><span class="kd">var</span> <span class="nx">planeGeometry</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">PlaneGeometry</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">幅</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nx">高さ</span><span class="o">&gt;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">planeMaterial</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span><span class="nx">color</span><span class="o">:</span> <span class="mh">0xcccccc</span><span class="p">});</span> <span class="c1">//見た目の設定</span>
+<span class="kd">var</span> <span class="nx">plane</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">planeGeometry</span><span class="p">,</span> <span class="nx">planeMaterial</span><span class="p">);</span> <span class="c1">//2つを組み合わせてplaneというMeshオブジェクトにする</span>
+</code></pre></div>
+<h4 id="_2">正しい位置に配置する<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1">//x軸周りに90度回転</span>
+<span class="nx">plane</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">;</span>
+<span class="nx">plane</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mf">15</span><span class="p">;</span>
+<span class="nx">plane</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
+<span class="nx">plane</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
+
+<span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">plane</span><span class="p">);</span>
+</code></pre></div>
+<h1 id="cudeqsphere">cudeオブジェクト,qsphereオブジェクト<a class="headerlink" href="#cudeqsphere" title="Permanent link">&para;</a></h1>
+<p>マテリアルのwireframeプロパティがtrueに設定されているため，Three.jsはソリッドなオブジェクトではなく，ワイヤーフレームを描画します．</p>
+<p><small>※プログラムはオライリージャパン出版の「初めてのThree.js」から引用</small></p>
+
+
+</section>
+</div> <!-- end of search-noresults -->
+<div class="search-results">
+<div class="has-results">
+
+<h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+<ul class="search-results-list"></ul>
+
+</div> <!-- end of has-results -->
+<div class="no-results">
+
+<h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+
+</div> <!-- end of no-results -->
+</div> <!-- end of search-results -->
+</div> <!-- end of book-search-results -->
+
+</div> <!-- end of page-inner -->
+</div> <!-- end of page-wrapper -->
+
+</div> <!-- end of body-inner -->
+
+</div> <!-- end of book-body -->
+<script src="../js/main.js"></script>
+<script src="../search/main.js"></script>
+<script src="../js/gitbook.min.js"></script>
+<script src="../js/theme.min.js"></script>
+</body>
+</html>

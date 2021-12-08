@@ -1,5 +1,7 @@
+# blog
 
+# build
+``$ mkdocs build``
 
-mkdocs serve
-mkdocs build
-mkdocs gh-deploy
+# server start
+``$ mkdocs serve``
