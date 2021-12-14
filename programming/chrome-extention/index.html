@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>Web extension intercepting request - evesquare</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="evesquareBlog">
+<meta name="generator" content="mkdocs-1.2.3, mkdocs-gitbook-1.0.7">
+<meta name="author" content="evesquare">
+<link rel="shortcut icon" href="../../images/favicon.ico" type="image/x-icon">
+<meta name="HandheldFriendly" content="true"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta rel="next" href="" />
+<link href="../../css/style.min.css" rel="stylesheet"> 
+</head>
+
+<body>
+<div class="book">
+<div class="book-summary">
+<div id="book-search-input" role="search">
+<input type="text" placeholder="Type to search" />
+</div> <!-- end of book-search-input -->
+
+<nav role="navigation">
+<ul class="summary">
+<li>
+<a href="../.." target="_blank" class="custom-link">evesquare</a>
+</li>
+<li class="divider"></li>
+<li class="chapter" data-path="">
+<a href="../..">Welcome to MkDocs</a>
+<li class="header">ThreeJS</li>
+
+<li>
+<a href="../../ThreeJS/threeJS00/" class="">Three.jsとはなにか</a>
+</li>
+
+<li>
+<a href="../../ThreeJS/threeJS01/" class="">Three.js学習</a>
+</li>
+
+<li class="header">Programming</li>
+
+<li>
+<a href="./" class="active">Web extension intercepting request</a>
+</li>
+
+<li class="divider"></li>
+
+
+<li>Copyright &copy 2022 evesquare</li>
+
+
+<li><a href="http://www.mkdocs.org">
+Published with MkDocs
+</a></li>
+
+<li><a href="https://github.com/GitbookIO/theme-default">
+Theme by GitBook
+</a></li>
+</ul>
+
+</nav>
+
+</div> <!-- end of book-summary -->
+
+<div class="book-body">
+<div class="body-inner">
+<div class="book-header" role="navigation">
+
+<!-- Title -->
+<h1>
+<i class="fa fa-circle-o-notch fa-spin"></i>
+<a href="." ></a>
+</h1>
+
+</div> <!-- end of book-header -->
+
+<div class="page-wrapper" tabindex="-1" role="main">
+<div class="page-inner">
+<div id="book-search-results">
+<div class="search-noresults">
+
+<section class="normal markdown-section">
+
+
+
+<h1 id="web-extension-intercepting-request">Web extension intercepting request<a class="headerlink" href="#web-extension-intercepting-request" title="Permanent link">&para;</a></h1>
+<h3 id="_1">やりたかったこと<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>GETリクエストのResponseBodyを取得したい．
+<img alt="chrome devtools" src="https://raw.githubusercontent.com/EveSquare/images/main/%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88%202021-12-14%2016.28.49.png?token=AMA45GUE2M5AHV37VB6JJDTBYGBPE" /></p>
+<p>候補として以下の3つがヒットした．
+- <a href="# × webRequest.onBeforeRequest.addListener">webRequest.onBeforeRequest.addListner</a>
+- <a href="# × devtools.network.onRequestFinished.addListener">devtools.network.onRequestFinished.addListener</a>
+- <a href="# × monkey patch">mokey patch</a></p>
+<p>結論として全て不可能であった．</p>
+<h2 id="webrequestonbeforerequestaddlistener">× webRequest.onBeforeRequest.addListener<a class="headerlink" href="#webrequestonbeforerequestaddlistener" title="Permanent link">&para;</a></h2>
+<p>extensionが扱える関数でリクエストをブロックするなどの利用用途がある．
+このリスナーで受け取れるデータは，URLなどのヘッダ情報のみであった．</p>
+<p>実際に動かしたプログラム</p>
+<div class="highlight"><pre><span></span><code>sample-extension/
+    backgtound.js
+    manifest.json
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">//background.js</span>
+<span class="nx">chrome</span><span class="p">.</span><span class="nx">webRequest</span><span class="p">.</span><span class="nx">onBeforeRequest</span><span class="p">.</span><span class="nx">addListener</span><span class="p">(</span>
+    <span class="nx">request_callback</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="nx">urls</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;&lt;all_urls&gt;&#39;</span><span class="p">],</span>
+        <span class="nx">types</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;xmlhttprequest&#39;</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="p">[</span><span class="s2">&quot;blocking&quot;</span><span class="p">,</span> <span class="s2">&quot;requestBody&quot;</span><span class="p">]</span>
+<span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">request_callback</span><span class="p">(</span><span class="nx">details</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">details</span><span class="p">.</span><span class="nx">method</span> <span class="o">===</span> <span class="s2">&quot;GET&quot;</span> <span class="o">&amp;&amp;</span> <span class="nx">details</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s2">&quot;xmlhttprequest&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">details</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">MER_URL_PATTERN</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">details</span><span class="p">.</span><span class="nx">requestBody</span><span class="p">);</span> <span class="c1">//undefined</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">//ma</span><span class="kc">n</span><span class="err">i</span><span class="kc">fest</span><span class="err">.jso</span><span class="kc">n</span>
+<span class="p">{</span>
+    <span class="nt">&quot;manifest_version&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Extension&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.0&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;&lt;all_urls&gt;&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;webRequest&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;webRequestBlocking&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;background&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;scripts&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;background.js&quot;</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>backgroundコンソール(Chromeの拡張機能から確認できる)にBodyが表示されているはず．</p>
+<h1 id="devtoolsnetworkonrequestfinishedaddlistener">× <a href="https://developer.chrome.com/docs/extensions/reference/devtools_network/">devtools.network.onRequestFinished.addListener</a><a class="headerlink" href="#devtoolsnetworkonrequestfinishedaddlistener" title="Permanent link">&para;</a></h1>
+<p><a href="https://developer.chrome.com/docs/extensions/reference/devtools_network/">documentation</a></p>
+<p>Chromeのdevelop toolを開いた状態でないと実行されないらしい．
+<code>devtools</code>を使用する場合は<code>js</code>ファイルを読み込むHTMLファイルを用意する必要がある．</p>
+<div class="highlight"><pre><span></span><code>sample-extension2/
+    devtools.js
+    devtools.html
+    manifest.json
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">//devtools.js</span>
+<span class="kd">function</span> <span class="nx">handleRequestFinished</span><span class="p">(</span><span class="nx">request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">chrome</span><span class="p">.</span><span class="nx">devtools</span><span class="p">.</span><span class="nx">inspectedWindow</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="sb">`console.log(&#39;</span><span class="si">${</span><span class="nx">request</span><span class="p">.</span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span><span class="si">}</span><span class="sb">&#39;);`</span><span class="p">);</span>
+        <span class="nx">request</span><span class="p">.</span><span class="nx">getContent</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">content</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">chrome</span><span class="p">.</span><span class="nx">devtools</span><span class="p">.</span><span class="nx">inspectedWindow</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="sb">`console.log(&#39;</span><span class="si">${</span><span class="nx">content</span><span class="si">}</span><span class="sb">&#39;);`</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">chrome</span><span class="p">.</span><span class="nx">devtools</span><span class="p">.</span><span class="nx">network</span><span class="p">.</span><span class="nx">onRequestFinished</span><span class="p">.</span><span class="nx">addListener</span><span class="p">(</span><span class="nx">handleRequestFinished</span><span class="p">);</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>&lt;!-- devtools.html --&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script src=&quot;devtools.js&quot;&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;&lt;/body&gt;
+&lt;/html&gt;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">//ma</span><span class="kc">n</span><span class="err">i</span><span class="kc">fest</span><span class="err">.jso</span><span class="kc">n</span>
+<span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Extension&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;manifest_version&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nt">&quot;devtools_page&quot;</span><span class="p">:</span> <span class="s2">&quot;devtools.html&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;&lt;all_urls&gt;&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>POSTのデータはBodyを確認することが出来たが，GETレスポンスのBodyは値が無かった．</p>
+<h1 id="monkey-patch">× monkey patch<a class="headerlink" href="#monkey-patch" title="Permanent link">&para;</a></h1>
+<p>散見された記事によると<code>window.XMLHttpRequest.prototype.open</code>を書き換えることでinterceptできるらしい．
+うまくいかず．</p>
+<h5 id="_2">以下ソース<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><a href="https://stackoverflow.com/questions/52969381/how-can-i-capture-all-network-requests-and-full-response-data-when-loading-a-pag">How can I capture all network requests and full response data when loading a page in Chrome?</a></p>
+<p><a href="https://betterprogramming.pub/chrome-extension-intercepting-and-reading-the-body-of-http-requests-dd9ebdf2348b">Chrome Extension: Reading the BODY of an HTTP response object</a></p>
+<p><a href="https://stackoverflow.com/questions/18534771/chrome-extension-how-to-get-http-response-body">Chrome Extension - How to get HTTP Response Body?
+</a></p>
+</blockquote>
+
+
+</section>
+</div> <!-- end of search-noresults -->
+<div class="search-results">
+<div class="has-results">
+
+<h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+<ul class="search-results-list"></ul>
+
+</div> <!-- end of has-results -->
+<div class="no-results">
+
+<h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+
+</div> <!-- end of no-results -->
+</div> <!-- end of search-results -->
+</div> <!-- end of book-search-results -->
+
+</div> <!-- end of page-inner -->
+</div> <!-- end of page-wrapper -->
+
+</div> <!-- end of body-inner -->
+
+</div> <!-- end of book-body -->
+<script src="../../js/main.js"></script>
+<script src="../../search/main.js"></script>
+<script src="../../js/gitbook.min.js"></script>
+<script src="../../js/theme.min.js"></script>
+</body>
+</html>
