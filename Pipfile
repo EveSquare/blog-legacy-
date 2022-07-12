@@ -3,10 +3,14 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[scripts]
+build = "mkdocs build"
+
 [packages]
-mkdocs-material = "*"
 
 [dev-packages]
+mkdocs-gitbook = "*"
+mkdocs-material = "*"
 
 [requires]
 python_version = "3.9"
