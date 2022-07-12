@@ -6,7 +6,7 @@
 <title>Web extension intercepting request - evesquare</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="evesquareBlog">
-<meta name="generator" content="mkdocs-1.2.3, mkdocs-gitbook-1.0.7">
+<meta name="generator" content="mkdocs-1.3.0, mkdocs-gitbook-1.0.7">
 <meta name="author" content="evesquare">
 <link rel="shortcut icon" href="../../images/favicon.ico" type="image/x-icon">
 <meta name="HandheldFriendly" content="true"/>
@@ -91,7 +91,7 @@ Theme by GitBook
 <h1 id="web-extension-intercepting-request">Web extension intercepting request<a class="headerlink" href="#web-extension-intercepting-request" title="Permanent link">&para;</a></h1>
 <h3 id="_1">やりたかったこと<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
 <p>GETリクエストのResponseBodyを取得したい．
-<img alt="chrome devtools" src="https://raw.githubusercontent.com/EveSquare/images/main/%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88%202021-12-14%2016.28.49.png?token=AMA45GUE2M5AHV37VB6JJDTBYGBPE" /></p>
+<img alt="chrome devtools" src="https://imgur.com/TrPiKdA" /></p>
 <p>候補として以下の3つがヒットした．
 - <a href="# × webRequest.onBeforeRequest.addListener">webRequest.onBeforeRequest.addListner</a>
 - <a href="# × devtools.network.onRequestFinished.addListener">devtools.network.onRequestFinished.addListener</a>
@@ -105,40 +105,40 @@ Theme by GitBook
     backgtound.js
     manifest.json
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1">//background.js</span>
-<span class="nx">chrome</span><span class="p">.</span><span class="nx">webRequest</span><span class="p">.</span><span class="nx">onBeforeRequest</span><span class="p">.</span><span class="nx">addListener</span><span class="p">(</span>
-    <span class="nx">request_callback</span><span class="p">,</span>
-    <span class="p">{</span>
-        <span class="nx">urls</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;&lt;all_urls&gt;&#39;</span><span class="p">],</span>
-        <span class="nx">types</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;xmlhttprequest&#39;</span><span class="p">],</span>
-    <span class="p">},</span>
-    <span class="p">[</span><span class="s2">&quot;blocking&quot;</span><span class="p">,</span> <span class="s2">&quot;requestBody&quot;</span><span class="p">]</span>
-<span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="c1">//background.js</span><span class="w"></span>
+<span class="nx">chrome</span><span class="p">.</span><span class="nx">webRequest</span><span class="p">.</span><span class="nx">onBeforeRequest</span><span class="p">.</span><span class="nx">addListener</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="nx">request_callback</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">urls</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;&lt;all_urls&gt;&#39;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="nx">types</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;xmlhttprequest&#39;</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="p">[</span><span class="s2">&quot;blocking&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;requestBody&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="p">);</span><span class="w"></span>
 
-<span class="kd">function</span> <span class="nx">request_callback</span><span class="p">(</span><span class="nx">details</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">details</span><span class="p">.</span><span class="nx">method</span> <span class="o">===</span> <span class="s2">&quot;GET&quot;</span> <span class="o">&amp;&amp;</span> <span class="nx">details</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s2">&quot;xmlhttprequest&quot;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">details</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">MER_URL_PATTERN</span><span class="p">))</span> <span class="p">{</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">details</span><span class="p">.</span><span class="nx">requestBody</span><span class="p">);</span> <span class="c1">//undefined</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">request_callback</span><span class="p">(</span><span class="nx">details</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">details</span><span class="p">.</span><span class="nx">method</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">details</span><span class="p">.</span><span class="nx">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;xmlhttprequest&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">details</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">MER_URL_PATTERN</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">details</span><span class="p">.</span><span class="nx">requestBody</span><span class="p">);</span><span class="w"> </span><span class="c1">//undefined</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="err">//ma</span><span class="kc">n</span><span class="err">i</span><span class="kc">fest</span><span class="err">.jso</span><span class="kc">n</span>
-<span class="p">{</span>
-    <span class="nt">&quot;manifest_version&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Extension&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.0&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">[</span>
-      <span class="s2">&quot;&lt;all_urls&gt;&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;webRequest&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;webRequestBlocking&quot;</span><span class="p">,</span>
-    <span class="p">],</span>
-    <span class="nt">&quot;background&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;scripts&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;background.js&quot;</span>
-      <span class="p">]</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="c1">//manifest.json</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;manifest_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Extension&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.0.0&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;&lt;all_urls&gt;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;webRequest&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;webRequestBlocking&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;background&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;background.js&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p>backgroundコンソール(Chromeの拡張機能から確認できる)にBodyが表示されているはず．</p>
 <h1 id="devtoolsnetworkonrequestfinishedaddlistener">× <a href="https://developer.chrome.com/docs/extensions/reference/devtools_network/">devtools.network.onRequestFinished.addListener</a><a class="headerlink" href="#devtoolsnetworkonrequestfinishedaddlistener" title="Permanent link">&para;</a></h1>
@@ -150,16 +150,16 @@ Theme by GitBook
     devtools.html
     manifest.json
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1">//devtools.js</span>
-<span class="kd">function</span> <span class="nx">handleRequestFinished</span><span class="p">(</span><span class="nx">request</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">chrome</span><span class="p">.</span><span class="nx">devtools</span><span class="p">.</span><span class="nx">inspectedWindow</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="sb">`console.log(&#39;</span><span class="si">${</span><span class="nx">request</span><span class="p">.</span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span><span class="si">}</span><span class="sb">&#39;);`</span><span class="p">);</span>
-        <span class="nx">request</span><span class="p">.</span><span class="nx">getContent</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">content</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">chrome</span><span class="p">.</span><span class="nx">devtools</span><span class="p">.</span><span class="nx">inspectedWindow</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="sb">`console.log(&#39;</span><span class="si">${</span><span class="nx">content</span><span class="si">}</span><span class="sb">&#39;);`</span><span class="p">);</span>
-        <span class="p">});</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="c1">//devtools.js</span><span class="w"></span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">handleRequestFinished</span><span class="p">(</span><span class="nx">request</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nx">chrome</span><span class="p">.</span><span class="nx">devtools</span><span class="p">.</span><span class="nx">inspectedWindow</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="sb">`console.log(&#39;</span><span class="si">${</span><span class="nx">request</span><span class="p">.</span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span><span class="si">}</span><span class="sb">&#39;);`</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="nx">request</span><span class="p">.</span><span class="nx">getContent</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">content</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nx">chrome</span><span class="p">.</span><span class="nx">devtools</span><span class="p">.</span><span class="nx">inspectedWindow</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="sb">`console.log(&#39;</span><span class="si">${</span><span class="nx">content</span><span class="si">}</span><span class="sb">&#39;);`</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">});</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="nx">chrome</span><span class="p">.</span><span class="nx">devtools</span><span class="p">.</span><span class="nx">network</span><span class="p">.</span><span class="nx">onRequestFinished</span><span class="p">.</span><span class="nx">addListener</span><span class="p">(</span><span class="nx">handleRequestFinished</span><span class="p">);</span>
+<span class="nx">chrome</span><span class="p">.</span><span class="nx">devtools</span><span class="p">.</span><span class="nx">network</span><span class="p">.</span><span class="nx">onRequestFinished</span><span class="p">.</span><span class="nx">addListener</span><span class="p">(</span><span class="nx">handleRequestFinished</span><span class="p">);</span><span class="w"></span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>&lt;!-- devtools.html --&gt;
 &lt;html&gt;
@@ -169,16 +169,16 @@ Theme by GitBook
     &lt;body&gt;&lt;/body&gt;
 &lt;/html&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="err">//ma</span><span class="kc">n</span><span class="err">i</span><span class="kc">fest</span><span class="err">.jso</span><span class="kc">n</span>
-<span class="p">{</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Extension&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;manifest_version&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="nt">&quot;devtools_page&quot;</span><span class="p">:</span> <span class="s2">&quot;devtools.html&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;permissions&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;&lt;all_urls&gt;&quot;</span>
-    <span class="p">]</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="c1">//manifest.json</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Extension&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;manifest_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;devtools_page&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;devtools.html&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;permissions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;&lt;all_urls&gt;&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <p>POSTのデータはBodyを確認することが出来たが，GETレスポンスのBodyは値が無かった．</p>
 <h1 id="monkey-patch">× monkey patch<a class="headerlink" href="#monkey-patch" title="Permanent link">&para;</a></h1>

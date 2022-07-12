@@ -2,7 +2,7 @@
 
 ### やりたかったこと
 GETリクエストのResponseBodyを取得したい．
-![chrome devtools](https://raw.githubusercontent.com/EveSquare/images/main/%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88%202021-12-14%2016.28.49.png?token=AMA45GUE2M5AHV37VB6JJDTBYGBPE)
+![chrome devtools](https://imgur.com/TrPiKdA)
 
 候補として以下の3つがヒットした．
 - <a href="# × webRequest.onBeforeRequest.addListener">webRequest.onBeforeRequest.addListner</a>

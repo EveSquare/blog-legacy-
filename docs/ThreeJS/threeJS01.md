@@ -26,7 +26,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 ## axesオブジェクト生成 
 
-![axesとは](https://raw.githubusercontent.com/EveSquare/images/main/axes.png?token=AMA45GTAYH25JCXWNGUO6JDBXGNHY)
+![axesとは](https://imgur.com/a/IpzOIEg)
 赤，青，緑の線のこと
 
 ```javascript
@@ -36,7 +36,7 @@ scene.add(axes);
 
 ## 平面を作成
 
-![平面を作成](https://raw.githubusercontent.com/EveSquare/images/main/axes.png?token=AMA45GTAYH25JCXWNGUO6JDBXGNHY)
+![平面を作成](https://imgur.com/a/IpzOIEg)
 灰色の薄っぺらい平面のこと
 
 ```javascript
